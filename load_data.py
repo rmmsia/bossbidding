@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 from st_files_connection import FilesConnection
 import gcsfs
+import json
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -17,7 +18,10 @@ warnings.filterwarnings('ignore')
 def load_data():
     df = pd.DataFrame()
 
-    gcs = gcsfs.GCSFileSystem(project='boss-402603', token='json-key/boss-402603-2775ebd9856e.json')
+    das_json = dict(st.secrets["toAuth"]["settings"])
+    project_id = st.secrets["the_secret"]
+
+    gcs = gcsfs.GCSFileSystem(project=project_id, token=das_json)
 
     bucket_name = 'boss-streamlit'
     folder_path = 'BOSS Results'
