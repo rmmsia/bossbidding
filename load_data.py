@@ -1,24 +1,38 @@
 import os
 import xlrd
 import pandas as pd
-import numpy as np
 import streamlit as st
+from st_files_connection import FilesConnection
+import gcsfs
 
 import warnings
 warnings.filterwarnings('ignore')
 
-path = os.getcwd() + '/BOSS Results'
-files = os.listdir(path)
-files_xls = [f for f in files if f[-3:] == 'xls']
-files_xls
+# path = os.getcwd() + '/BOSS Results'
+# files = os.listdir(path)
+# files_xls = [f for f in files if f[-3:] == 'xls']
+# files_xls
 
 @st.cache_data
 def load_data():
     df = pd.DataFrame()
 
-    for f in files_xls:
-        data = pd.read_excel(path + '/' + f, 'sheet1')
-        df = df._append(data)
+    gcs = gcsfs.GCSFileSystem(project='boss-402603', token='json-key/boss-402603-2775ebd9856e.json')
+
+    bucket_name = 'boss-streamlit'
+    folder_path = 'BOSS Results'
+
+    file_list = gcs.glob(f'{bucket_name}/{folder_path}/*.xls')
+
+    print(file_list)
+
+    for file in file_list:
+        with gcs.open(file, 'rb') as f:
+            print("OH MY GOD")
+            data = pd.read_excel(f, 'sheet1')
+            print("SHEEESH")
+            df = df._append(data)
+            print("CLAP CLAP CLAP")
     
     # Cleaning
 
