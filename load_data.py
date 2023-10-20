@@ -2,7 +2,6 @@ import os
 import xlrd
 import pandas as pd
 import streamlit as st
-from st_files_connection import FilesConnection
 import gcsfs
 import json
 
