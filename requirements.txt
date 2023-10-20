@@ -1,5 +1,5 @@
 streamlit==1.27.2
 pandas==2.0.3
 numpy==1.25.2
-xlrd==2.0.1
+xlrd
 scitkit-learn==1.3.0
