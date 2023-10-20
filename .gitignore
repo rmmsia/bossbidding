@@ -1,0 +1,6 @@
+*.ipynb
+/.venv
+/.ipynb_checkpoints
+/__pycache__
+*.xls
+.DS_Store
