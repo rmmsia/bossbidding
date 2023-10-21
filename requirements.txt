@@ -15,3 +15,4 @@ cycler
 dateutil
 kiwisolver
 pyparsing
+seaborn
