@@ -31,11 +31,8 @@ def load_data():
 
     for file in file_list:
         with gcs.open(file, 'rb') as f:
-            print("OH MY GOD")
             data = pd.read_excel(f, 'sheet1')
-            print("SHEEESH")
             df = df._append(data)
-            print("CLAP CLAP CLAP")
     
     # Cleaning
 
