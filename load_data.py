@@ -31,8 +31,10 @@ def load_data():
 
     for file in file_list:
         with gcs.open(file, 'rb') as f:
+            print(f"Now reading: {file}")
             data = pd.read_excel(f, 'sheet1')
             df = df._append(data)
+            print(f"Finished reading: {file}")
     
     # Cleaning
 
@@ -47,6 +49,8 @@ def load_data():
     df = df.dropna()
     df = df[df.median_bid != 0.0]
     print(f"No. of rows after: {len(df.index)}")
+
+    df["code_title"] = df["course_code"].astype(str) + " - " + df["description"].astype(str)
 
     return df
 

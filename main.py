@@ -6,17 +6,25 @@ import regression
 st.header("BOSS Bidding Analysis")
 st.write("DISCLAIMER: The predictions are not 100% accurate. Please use them as a reference only.")
 st.write("We are not responsible for any unsuccessful bids that you make.")
-courseList = load_data.df['course_code'].sort_values()
-courseOption = st.selectbox("Course", courseList.unique())
 
-roundList = load_data.df['bidding_window'].sort_values()
+df = load_data.load_data()
+
+courseList = df['code_title'].sort_values()
+selection = st.selectbox("Course", courseList.unique())
+courseOption = df.loc[df['code_title'] == selection, 'course_code'].iloc[0]
+
+roundList = df['bidding_window'].sort_values()
 roundOption = st.selectbox("Round", roundList.unique())
 
-minBid, medBid = regression.BidRegression(courseOption, roundOption, load_data.df)
+try:
+    minBid, medBid, fig = regression.BidRegression(courseOption, roundOption, df)
+    with st.container():
+        st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
+        st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}")
+        st.pyplot(fig)
 
-with st.container():
-  st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
-  st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}")
+except ValueError:
+    st.write("Currently no data for this course and round. Choose a different course and/or round.")
 
 st.divider()
-st.text("v1.0.1")
+st.text("v1.1.0")
