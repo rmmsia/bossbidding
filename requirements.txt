@@ -71,7 +71,6 @@ seaborn==0.13.0
 Sphinx==5.0.2
 streamlit==1.27.2
 tornado==6.3.3
-truststore==0.8.0
 urllib3_secure_extra==0.1.0
 xlrd==2.0.1
 xmlrpclib==1.0.1
