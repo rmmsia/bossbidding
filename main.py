@@ -14,5 +14,9 @@ roundOption = st.selectbox("Round", roundList.unique())
 
 minBid, medBid = regression.BidRegression(courseOption, roundOption, load_data.df)
 
-st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
-st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}")
+with st.container():
+  st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
+  st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}")
+
+st.divider()
+st.text("v1.0.1")
