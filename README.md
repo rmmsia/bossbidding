@@ -1,9 +1,11 @@
 # BOSS Bidding Analysis
 
+Want to see the app in action? Check it out here: https://bossbidding.streamlit.app
+
 The task is simple: take past year SMU BOSS bidding data and conduct statistical analysis to predict what the minimum and median bids might be for future bidding windows.
 
 The execution is just as simple: Use simple, single-variable linear regression (bid price against time) for the prediction. Now extend it to every course that has ever
-been bidded for in SMU in the past four years and create a UI and put it on a web application so I don't need to keep running the same cells on a Jupyter Notebook every time
+been bidded for in SMU in the past four years and create a UI and put it on a web application, so I don't need to keep running the same cells on a Jupyter Notebook every time
 I need to check the predicted bid prices for any courses I want to bid for.
 
 ## Data storage
