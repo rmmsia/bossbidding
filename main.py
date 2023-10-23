@@ -17,11 +17,22 @@ roundList = df['bidding_window'].sort_values()
 roundOption = st.selectbox("Round", roundList.unique())
 
 try:
-    minBid, medBid, fig = regression.BidRegression(courseOption, roundOption, df)
+    minBid, medBid, fig, minBidScore, medBidScore = regression.BidRegression(courseOption, roundOption, df)
     with st.container():
-        st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
-        st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}")
+        try:
+            st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
+        except TypeError:
+            st.write(f"Predicted Minimum Bid: {round(minBid, 2)}")
+        try:
+            st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}") 
+        except TypeError:
+            st.write(f"Predicted Median Bid: {round(medBid, 2)}")
         st.pyplot(fig)
+        st.write(f"Min Bid r²: {round(minBidScore, 4)}")
+        st.write(f"Med Bid r²: {round(medBidScore, 4)}")
+
+        if minBidScore < 0.5 or medBidScore < 0.5:
+            st.write(f":red[Warning]: r² is low (< 0.5). The prediction may not be accurate.")
 
 except ValueError:
     st.write("Currently no data for this course and round. Choose a different course and/or round.")

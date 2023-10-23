@@ -35,17 +35,18 @@ def BidRegression(course, round, df):
     from sklearn.linear_model import LinearRegression
 
     model1 = LinearRegression().fit(X, y1)
-    model1_r2 = model1.score(X, y1)
-    coef1 = model1.coef_
-    int1 = model1.intercept_
-
     model2 = LinearRegression().fit(X, y2)
-    model2_r2 = model1.score(X, y2)
-    coef2 = model1.coef_
-    int2 = model1.intercept_
 
     minBid = model1.predict([[analysis_df['term_idx'].max()+1]]).tolist()
     medBid = model2.predict([[analysis_df['term_idx'].max()+1]]).tolist()
+
+    minBidScore = model2.score(X, y1)
+    medBidScore = model2.score(X, y2)
+
+    # minBid_ssr_df = pd.DataFrame({'Actual' : y1, 'Predicted': minBid})
+    # medBid_ssr_df = pd.DataFrame({'Actual' : y2, 'Predicted': medBid})
+
+    # print("SSR minBid: " + str(np.sum(np.square(minBid_ssr_df['Predicted'] - minBid_ssr_df['Actual']))))
 
     # Regression Plots
 
@@ -65,4 +66,4 @@ def BidRegression(course, round, df):
     axs[0].set_ylabel("Median Bid")
     axs[1].set_ylabel("Min Bid")
 
-    return lessThanTen(minBid), lessThanTen(medBid), fig
+    return lessThanTen(minBid), lessThanTen(medBid), fig, minBidScore, medBidScore
