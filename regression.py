@@ -53,11 +53,6 @@ def BidRegression(df):
     minBidScore = model1.score(X, y1)
     medBidScore = model2.score(X, y2)
 
-    # minBid_ssr_df = pd.DataFrame({'Actual' : y1, 'Predicted': minBid})
-    # medBid_ssr_df = pd.DataFrame({'Actual' : y2, 'Predicted': medBid})
-
-    # print("SSR minBid: " + str(np.sum(np.square(minBid_ssr_df['Predicted'] - minBid_ssr_df['Actual']))))
-
     # Regression Plots
 
     fig, axs = plt.subplots(ncols=2, figsize=(12,4))
