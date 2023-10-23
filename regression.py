@@ -16,6 +16,12 @@ def validBidWindow(df, string):
         return True
     else:
         return (df['bidding_window'] == string)
+
+def validProf(df, string):
+    if string is None:
+        return True
+    else:
+        return (df['instructor'] == string)
     
 def lessThanTen(bidPrice):
     if bidPrice[0][0] < 10:
@@ -23,22 +29,26 @@ def lessThanTen(bidPrice):
     else:
         return bidPrice
 
-def BidRegression(course, round, df):
-    analysis_df = df.loc[validCourseCode(df, course) & validBidWindow(df, round)]
+def get_analysis_df(course, round, prof, df):
+    return df.loc[validCourseCode(df, course) & validBidWindow(df, round) & validProf(df, prof)]
+
+def BidRegression(df):
+    #analysis_df = get_analysis_df(course, round, prof, df)
+    #analysis_df = df.loc[validCourseCode(df, course) & validBidWindow(df, round) & validProf(df, prof)]
 
     from sklearn.model_selection import train_test_split
 
-    X = analysis_df[["term_idx"]]
-    y1 = analysis_df[["min_bid"]]
-    y2 = analysis_df[["median_bid"]]
+    X = df[["term_idx"]]
+    y1 = df[["min_bid"]]
+    y2 = df[["median_bid"]]
 
     from sklearn.linear_model import LinearRegression
 
     model1 = LinearRegression().fit(X, y1)
     model2 = LinearRegression().fit(X, y2)
 
-    minBid = model1.predict([[analysis_df['term_idx'].max()+1]]).tolist()
-    medBid = model2.predict([[analysis_df['term_idx'].max()+1]]).tolist()
+    minBid = model1.predict([[df['term_idx'].max()+1]]).tolist()
+    medBid = model2.predict([[df['term_idx'].max()+1]]).tolist()
 
     minBidScore = model2.score(X, y1)
     medBidScore = model2.score(X, y2)
@@ -55,8 +65,8 @@ def BidRegression(course, round, df):
     termsList = ['2020-21 Term 1', '2020-21 Term 2', '2019-20 Term 1', '2019-20 Term 2',
                         '2021-22 Term 1', '2021-22 Term 2', '2022-23 Term 1', '2022-23 Term 2']
         
-    sns.regplot(x='term_idx', y='median_bid', data=analysis_df, ax=axs[0])
-    sns.regplot(x='term_idx', y='min_bid', data=analysis_df, ax=axs[1])
+    sns.regplot(x='term_idx', y='median_bid', data=df, ax=axs[0])
+    sns.regplot(x='term_idx', y='min_bid', data=df, ax=axs[1])
 
     for ax in axs:
         ax.set_xticklabels(termsList)
