@@ -50,7 +50,7 @@ def BidRegression(df):
     minBid = model1.predict([[df['term_idx'].max()+1]]).tolist()
     medBid = model2.predict([[df['term_idx'].max()+1]]).tolist()
 
-    minBidScore = model2.score(X, y1)
+    minBidScore = model1.score(X, y1)
     medBidScore = model2.score(X, y2)
 
     # minBid_ssr_df = pd.DataFrame({'Actual' : y1, 'Predicted': minBid})
