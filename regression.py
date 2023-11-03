@@ -28,6 +28,12 @@ def lessThanTen(bidPrice):
         return 10.0
     else:
         return bidPrice
+    
+def medLessThanMin(medBid, minBid):
+    if medBid[0][0] < minBid[0][0]:
+        return minBid
+    else:
+        return medBid
 
 def get_analysis_df(course, round, prof, df):
     return df.loc[validCourseCode(df, course) & validBidWindow(df, round) & validProf(df, prof)]
@@ -71,4 +77,4 @@ def BidRegression(df):
     axs[0].set_ylabel("Median Bid")
     axs[1].set_ylabel("Min Bid")
 
-    return lessThanTen(minBid), lessThanTen(medBid), fig, minBidScore, medBidScore
+    return lessThanTen(minBid), medLessThanMin(lessThanTen(medBid), minBid), fig, minBidScore, medBidScore

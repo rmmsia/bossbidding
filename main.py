@@ -45,4 +45,4 @@ except ValueError:
     st.write("Currently no data for this course and round. Choose a different course and/or round.")
 
 st.divider()
-st.text("v1.3.0")
+st.text("v1.3.1")
