@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import utils
 
 import load_data
 
@@ -24,16 +25,20 @@ def validProf(df, string):
         return (df['instructor'] == string)
     
 def lessThanTen(bidPrice):
-    if bidPrice[0][0] < 10:
+    if bidPrice < 10:
         return 10.0
     else:
         return bidPrice
     
 def medLessThanMin(medBid, minBid):
-    if medBid[0][0] < minBid[0][0]:
+    if medBid < minBid:
         return minBid
-    else:
-        return medBid
+
+
+def deList(bidPrice):
+    while not isinstance(bidPrice, float):
+        bidPrice = bidPrice[0]
+    return bidPrice
 
 def get_analysis_df(course, round, prof, df):
     return df.loc[validCourseCode(df, course) & validBidWindow(df, round) & validProf(df, prof)]
@@ -56,25 +61,35 @@ def BidRegression(df):
     minBid = model1.predict([[df['term_idx'].max()+1]]).tolist()
     medBid = model2.predict([[df['term_idx'].max()+1]]).tolist()
 
+    # Handling lists
+
+    if minBid is not float:
+        minBid = deList(minBid)
+    if medBid is not float:
+        medBid = deList(medBid)
+
+    # Handling negative predictions
+
+    if medBid < minBid:
+        print("WARNING: MEDIAN LESS THAN MIN")
+        medBid = minBid
+
     minBidScore = model1.score(X, y1)
     medBidScore = model2.score(X, y2)
 
     # Regression Plots
 
     fig, axs = plt.subplots(ncols=2, figsize=(12,4))
-
-    termsList = ['2020-21 Term 1', '2020-21 Term 2', '2019-20 Term 1', '2019-20 Term 2',
-                        '2021-22 Term 1', '2021-22 Term 2', '2022-23 Term 1', '2022-23 Term 2']
         
     sns.regplot(x='term_idx', y='median_bid', data=df, ax=axs[0])
     sns.regplot(x='term_idx', y='min_bid', data=df, ax=axs[1])
 
     for ax in axs:
-        ax.set_xticklabels(termsList)
+        ax.set_xticklabels(utils.termsList)
         ax.set_xlabel("Term")
         plt.setp(ax.get_xticklabels(), rotation=40)
 
     axs[0].set_ylabel("Median Bid")
     axs[1].set_ylabel("Min Bid")
 
-    return lessThanTen(minBid), medLessThanMin(lessThanTen(medBid), minBid), fig, minBidScore, medBidScore
+    return lessThanTen(minBid), lessThanTen(medBid), fig, minBidScore, medBidScore

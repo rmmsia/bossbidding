@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import load_data
 import regression
+import utils
 
 st.header("BOSS Bidding Analysis")
 st.write("DISCLAIMER: The predictions are not 100% accurate. Please use them as a reference only.")
@@ -13,7 +14,7 @@ courseList = df['code_title'].sort_values()
 selection = st.selectbox("Course", courseList.unique())
 courseOption = df.loc[df['code_title'] == selection, 'course_code'].iloc[0]
 
-roundList = df['bidding_window'].sort_values()
+roundList = df['bidding_window'].sort_values(key=lambda x: x.map(utils.window_sort))
 roundOption = st.selectbox("Round", roundList.unique())
 
 profList = df.loc[df['course_code'] == courseOption, 'instructor']
@@ -27,13 +28,13 @@ try:
     minBid, medBid, fig, minBidScore, medBidScore = regression.BidRegression(filtered_df)
     with st.container():
         try:
-            st.write(f"Predicted Minimum Bid: {round(minBid[0][0], 2)}")
-        except TypeError:
             st.write(f"Predicted Minimum Bid: {round(minBid, 2)}")
-        try:
-            st.write(f"Predicted Median Bid: {round(medBid[0][0], 2)}") 
         except TypeError:
-            st.write(f"Predicted Median Bid: {round(medBid, 2)}")
+            st.write(f"Predicted Minimum Bid: {minBid}")
+        try:
+            st.write(f"Predicted Median Bid: {round(medBid, 2)}") 
+        except TypeError:
+            st.write(f"Predicted Median Bid: {medBid}")
         st.pyplot(fig)
         st.write(f"Min Bid r²: {round(minBidScore, 4)}")
         st.write(f"Med Bid r²: {round(medBidScore, 4)}")
@@ -45,4 +46,4 @@ except ValueError:
     st.write("Currently no data for this course and round. Choose a different course and/or round.")
 
 st.divider()
-st.text("v1.3.1")
+st.text("v1.3.2")
