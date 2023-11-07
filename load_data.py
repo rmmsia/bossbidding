@@ -52,6 +52,8 @@ def load_data():
 
     df["code_title"] = df["course_code"].astype(str) + " - " + df["description"].astype(str)
 
+    print("Ready")
+
     return df
 
 df = load_data()

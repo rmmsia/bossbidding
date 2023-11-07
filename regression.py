@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy import stats
 import utils
 
 import load_data
@@ -47,11 +48,25 @@ def BidRegression(df):
     #analysis_df = get_analysis_df(course, round, prof, df)
     #analysis_df = df.loc[validCourseCode(df, course) & validBidWindow(df, round) & validProf(df, prof)]
 
-    from sklearn.model_selection import train_test_split
-
     X = df[["term_idx"]]
     y1 = df[["min_bid"]]
     y2 = df[["median_bid"]]
+
+    print(f"Z-Scores for Min Bid for {df['code_title'].iloc[0]}, {df['bidding_window'].iloc[0]}")
+    print(np.abs(stats.zscore(y1)))
+    print()
+    print(f"Z-Scores for Median Bid for {df['code_title'].iloc[0]}, {df['bidding_window'].iloc[0]}")
+    print(np.abs(stats.zscore(y2)))
+
+    # OUTLIERS
+    z_min = y1[(np.abs(stats.zscore(y1)) > 2).all(axis=1)]
+    z_med = y2[(np.abs(stats.zscore(y2)) > 2).all(axis=1)]
+
+    print("Outliers for Min Bid")
+    print(z_min)
+    print("Outliers for Median Bid")
+    print(z_med)
+
 
     from sklearn.linear_model import LinearRegression
 
@@ -71,7 +86,7 @@ def BidRegression(df):
     # Handling negative predictions
 
     if medBid < minBid:
-        print("WARNING: MEDIAN LESS THAN MIN")
+        print(f'WARNING: MEDIAN LESS THAN MIN FOR {df["code_title"].iloc[0]}, {df["bidding_window"].iloc[0]}')
         medBid = minBid
 
     minBidScore = model1.score(X, y1)
@@ -81,8 +96,8 @@ def BidRegression(df):
 
     fig, axs = plt.subplots(ncols=2, figsize=(12,4))
         
-    sns.regplot(x='term_idx', y='median_bid', data=df, ax=axs[0])
-    sns.regplot(x='term_idx', y='min_bid', data=df, ax=axs[1])
+    sns.regplot(x='term_idx', y='median_bid', data=df, ax=axs[1])
+    sns.regplot(x='term_idx', y='min_bid', data=df, ax=axs[0])
 
     for ax in axs:
         ax.set_xticklabels(utils.termsList)
