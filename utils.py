@@ -13,4 +13,4 @@ window_sort = {'Round 1 Window 1':0, 'Round 1 Window 2':1,
 
 termsList = ['2020-21 Term 1', '2020-21 Term 2', '2019-20 Term 1', '2019-20 Term 2',
                         '2021-22 Term 1', '2021-22 Term 2', '2022-23 Term 1', '2022-23 Term 2',
-                        '2023-24 Term 1']
+                        '2023-24 Term 1', '2023-24 Term 2']
